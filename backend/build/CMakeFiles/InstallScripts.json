@@ -1,0 +1,10 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/dakota/BookTracker/backend/build/cmake_install.cmake",
+		"/home/dakota/BookTracker/backend/build/external/SQLiteCpp/cmake_install.cmake",
+		"/home/dakota/BookTracker/backend/build/external/SQLiteCpp/sqlite3/cmake_install.cmake",
+		"/home/dakota/BookTracker/backend/build/external/json/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/BookTracker.dir/link.d CMakeFiles/BookTracker.dir/src/main.cpp.o CMakeFiles/BookTracker.dir/src/database.cpp.o CMakeFiles/BookTracker.dir/src/api.cpp.o -o BookTracker  external/SQLiteCpp/libSQLiteCpp.a external/SQLiteCpp/sqlite3/libsqlite3.a -lpthread -ldl -lcurl

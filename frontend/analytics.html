@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BookTracker Analytics</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>📊 Analytics Dashboard</h1>
+
+  <canvas id="statusChart" width="400" height="200"></canvas>
+  <canvas id="genreChart" width="400" height="200"></canvas>
+
+  <script>
+    async function loadAnalytics(){
+      const res = await fetch('http://localhost:8080/api/analytics');
+      const analytics = await res.json();
+
+      // Status Chart
+      new Chart(document.getElementById('statusChart'), {
+        type: 'pie',
+        data: {
+          labels: Object.keys(analytics.status_counts),
+          datasets: [{ data: Object.values(analytics.status_counts) }]
+        }
+      });
+
+      // Genre Chart
+      new Chart(document.getElementById('genreChart'), {
+        type: 'bar',
+        data: {
+          labels: Object.keys(analytics.genres),
+          datasets: [{
+            label: '# of Books per Genre',
+            data: Object.values(analytics.genres),
+            backgroundColor: 'rgba(54, 162, 235, 0.5)'
+          }]
+        }
+      });
+    }
+
+    loadAnalytics();
+  </script>
+</body>
+</html>
