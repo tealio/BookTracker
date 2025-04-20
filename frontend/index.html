@@ -24,8 +24,25 @@
 </head>
 <body class="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white px-4 max-w-3xl mx-auto transition">
 
+  <!-- Immediately apply stored dark‑mode preference -->
+  <script>
+    if (localStorage.getItem('darkMode') === 'on') {
+      document.documentElement.classList.add('dark');
+    }
+  </script>
+
   <!-- Authentication Forms -->
   <div id="auth" class="space-y-8 py-8">
+
+    <!-- Header with Dark‑Mode Toggle -->
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-3xl font-bold">🔐 BookTracker</h1>
+      <button onclick="toggleDarkMode()"
+        class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded">
+        🌓
+      </button>
+    </div>
+
     <div class="bg-white dark:bg-gray-800 p-6 rounded shadow">
       <h3 class="text-xl font-semibold mb-4">Sign Up</h3>
       <form id="signupForm" class="space-y-2">
@@ -33,9 +50,13 @@
                class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white dark:border-gray-600" />
         <input id="signupPassword" type="password" placeholder="Password" required
                class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white dark:border-gray-600" />
-        <button class="w-full bg-primary text-white py-2 rounded">Sign Up</button>
+        <button type="submit"
+                class="w-full bg-primary text-white py-2 rounded hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 transition">
+          Sign Up
+        </button>
       </form>
     </div>
+
     <div class="bg-white dark:bg-gray-800 p-6 rounded shadow">
       <h3 class="text-xl font-semibold mb-4">Log In</h3>
       <form id="loginForm" class="space-y-2">
@@ -43,7 +64,10 @@
                class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white dark:border-gray-600" />
         <input id="loginPassword" type="password" placeholder="Password" required
                class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white dark:border-gray-600" />
-        <button class="w-full bg-primary text-white py-2 rounded">Log In</button>
+        <button type="submit"
+                class="w-full bg-primary text-white py-2 rounded hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 transition">
+          Log In
+        </button>
       </form>
     </div>
   </div>
@@ -55,8 +79,14 @@
     <div class="flex justify-between items-center my-4">
       <h1 class="text-3xl font-bold">📚 BookTracker</h1>
       <div class="space-x-2">
-        <button id="logoutBtn" class="px-3 py-1 bg-red-500 text-white rounded">Log Out</button>
-        <button onclick="toggleDarkMode()" class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded">🌓</button>
+        <button id="logoutBtn"
+                class="px-3 py-1 bg-red-500 text-white rounded">
+          Log Out
+        </button>
+        <button onclick="toggleDarkMode()"
+                class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded">
+          🌓
+        </button>
       </div>
     </div>
 
@@ -78,7 +108,8 @@
                class="flex-1 px-3 py-2 border border-gray-300 rounded bg-white text-gray-900
                       dark:bg-gray-700 dark:text-white dark:border-gray-600"
                placeholder="Search for a book…" />
-        <button class="bg-primary text-white px-4 py-2 rounded hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 transition">
+        <button
+          class="bg-primary text-white px-4 py-2 rounded hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 transition">
           Search
         </button>
       </form>

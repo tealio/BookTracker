@@ -6,16 +6,11 @@
 #include <sstream>
 #include <iomanip>
 #include <ctime>
+#include <optional>
 
-// Returns current UTC time in ISO format
-static std::string nowISO() {
-    std::time_t t = std::time(nullptr);
-    std::ostringstream ss;
-    ss << std::put_time(std::gmtime(&t), "%Y-%m-%dT%H:%M:%SZ");
-    return ss.str();
-}
+// — Helpers —
 
-// Generates a random hex token
+// Make a random hex token
 static std::string makeToken(int len = 32) {
     static std::mt19937_64 rng{std::random_device{}()};
     static std::uniform_int_distribution<uint64_t> dist;
@@ -24,135 +19,175 @@ static std::string makeToken(int len = 32) {
     return ss.str().substr(0, len);
 }
 
-// Set an HTTP-only cookie
-static void setCookie(httplib::Response& res, const std::string& name, const std::string& val) {
-    res.set_header("Set-Cookie",
-                   name + "=" + val + "; HttpOnly; Path=/; Max-Age=" + std::to_string(7*24*3600));
+// ISO now
+static std::string nowISO() {
+    std::time_t t = std::time(nullptr);
+    std::ostringstream ss;
+    ss << std::put_time(std::gmtime(&t), "%Y-%m-%dT%H:%M:%SZ");
+    return ss.str();
 }
 
-// Clear a cookie
-static void clearCookie(httplib::Response& res, const std::string& name) {
-    res.set_header("Set-Cookie", name + "=; HttpOnly; Path=/; Max-Age=0");
+// ISO N days in the future
+static std::string futureISO(int days) {
+    std::time_t t = std::time(nullptr) + days * 24 * 3600;
+    std::ostringstream ss;
+    ss << std::put_time(std::gmtime(&t), "%Y-%m-%dT%H:%M:%SZ");
+    return ss.str();
 }
 
-// Extract session token from Cookie header
-static std::optional<std::string> getSessionToken(const httplib::Request& req) {
-    auto it = req.headers.find("Cookie");
-    if (it == req.headers.end()) return std::nullopt;
-    std::istringstream ss(it->second);
-    std::string kv;
-    while (std::getline(ss, kv, ';')) {
-        auto pos = kv.find('=');
-        if (pos != std::string::npos) {
-            std::string k = kv.substr(0, pos);
-            std::string v = kv.substr(pos + 1);
-            while (!k.empty() && k.front() == ' ') k.erase(k.begin());
-            if (k == "session") return v;
-        }
-    }
-    return std::nullopt;
-}
+// — Main —
 
 int main() {
     Database db("/home/dakota/BookTracker/backend/resources/database.sqlite");
     GoogleBooksAPI api;
     httplib::Server svr;
 
-    // Serve static frontend files
-    svr.set_mount_point("/", "/home/dakota/BookTracker/frontend");
+    // 1) Log every request
+    svr.set_logger([](const httplib::Request& req, const httplib::Response&) {
+        std::cout << "[" << req.method << "] " << req.path << "\n";
+    });
 
-    // CORS helper
-    auto enableCORS = [&](httplib::Response& res) {
-        res.set_header("Access-Control-Allow-Origin", "*");
+    // 2) CORS (echo origin + allow credentials)
+    auto enableCORS = [&](const httplib::Request& req, httplib::Response& res) {
+        auto origin = req.get_header_value("Origin");
+        res.set_header("Access-Control-Allow-Origin",
+                       origin.empty() ? "*" : origin);
+        res.set_header("Access-Control-Allow-Credentials", "true");
         res.set_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         res.set_header("Access-Control-Allow-Headers", "Content-Type");
     };
 
     // OPTIONS preflight
-    svr.Options(R"(.*)", [&](const auto&, auto& res) {
-        enableCORS(res);
+    svr.Options(R"(.*)", [&](const auto& req, auto& res) {
+        enableCORS(req, res);
         res.status = 204;
     });
 
-    // Sign up
-    svr.Post("/api/signup", [&](auto& req, auto& res) {
-        enableCORS(res);
-        auto j = nlohmann::json::parse(req.body);
-        std::string user = j["username"];
-        std::string pass = j["password"];
-        std::string hash = std::to_string(std::hash<std::string>{}(pass));
+    // Helper: parse our session cookie
+    auto getSessionToken = [&](const httplib::Request& req) -> std::optional<std::string> {
+        auto it = req.headers.find("Cookie");
+        if (it == req.headers.end()) return std::nullopt;
+        std::istringstream ss(it->second);
+        std::string kv;
+        while (std::getline(ss, kv, ';')) {
+            auto pos = kv.find('=');
+            if (pos == std::string::npos) continue;
+            std::string k = kv.substr(0, pos),
+                        v = kv.substr(pos+1);
+            while (!k.empty() && k.front()==' ') k.erase(k.begin());
+            if (k == "session") return v;
+        }
+        return std::nullopt;
+    };
+
+    // Set/Clear cookie
+    auto setCookie = [&](httplib::Response& res, const std::string& token) {
+        res.set_header("Set-Cookie",
+            "session=" + token +
+            "; HttpOnly; Path=/; Max-Age=" + std::to_string(7*24*3600));
+    };
+    auto clearCookie = [&](httplib::Response& res) {
+        res.set_header("Set-Cookie",
+                       "session=; HttpOnly; Path=/; Max-Age=0");
+    };
+
+    // --- AUTH ROUTES ---
+
+    svr.Post("/api/signup", [&](const auto& req, auto& res) {
+        enableCORS(req, res);
+        auto j    = nlohmann::json::parse(req.body);
+        auto user = j["username"].template get<std::string>();
+        auto pass = j["password"].template get<std::string>();
+        auto hash = std::to_string(std::hash<std::string>{}(pass));
+
         if (db.createUser(user, hash)) {
             res.status = 201;
-            res.set_content(R"({"message":"User created"})", "application/json");
+            res.set_content(R"({"message":"User created"})","application/json");
         } else {
             res.status = 409;
-            res.set_content(R"({"error":"Username exists"})", "application/json");
+            res.set_content(R"({"error":"Username exists"})","application/json");
         }
     });
 
-    // Log in
-    svr.Post("/api/login", [&](auto& req, auto& res) {
-        enableCORS(res);
-        auto j = nlohmann::json::parse(req.body);
-        auto opt = db.getUserByUsername(j["username"]);
+    svr.Post("/api/login", [&](const auto& req, auto& res) {
+        enableCORS(req, res);
+        auto j    = nlohmann::json::parse(req.body);
+        auto user = j["username"].template get<std::string>();
+        auto pass = j["password"].template get<std::string>();
+
+        auto opt = db.getUserByUsername(user);
         if (!opt) {
             res.status = 401;
-            res.set_content(R"({"error":"Invalid creds"})", "application/json");
+            res.set_content(R"({"error":"Invalid creds"})","application/json");
             return;
         }
         int uid = opt->first;
-        std::string hash = std::to_string(std::hash<std::string>{}(j["password"]));
-        if (hash != opt->second) {
+        auto hashCheck = std::to_string(std::hash<std::string>{}(pass));
+        if (hashCheck != opt->second) {
             res.status = 401;
-            res.set_content(R"({"error":"Invalid creds"})", "application/json");
+            res.set_content(R"({"error":"Invalid creds"})","application/json");
             return;
         }
-        std::string token = makeToken();
-        db.createSession(token, uid, nowISO());
-        setCookie(res, "session", token);
-        res.set_content(R"({"message":"Logged in"})", "application/json");
+
+        // Create a session expiring 7 days from now
+        auto token = makeToken();
+        db.createSession(token, uid, futureISO(7));
+        setCookie(res, token);
+
+        res.set_content(R"({"message":"Logged in"})","application/json");
     });
 
-    // Log out
-    svr.Post("/api/logout", [&](auto& req, auto& res) {
-        enableCORS(res);
-        if (auto tok = getSessionToken(req)) db.deleteSession(*tok);
-        clearCookie(res, "session");
-        res.set_content(R"({"message":"Logged out"})", "application/json");
+    svr.Post("/api/logout", [&](const auto& req, auto& res) {
+        enableCORS(req, res);
+        if (auto tok = getSessionToken(req)) {
+            db.deleteSession(*tok);
+        }
+        clearCookie(res);
+        res.set_content(R"({"message":"Logged out"})","application/json");
     });
 
-    // Who am I?
-    svr.Get("/api/me", [&](auto& req, auto& res) {
-        enableCORS(res);
+    svr.Get("/api/me", [&](const auto& req, auto& res) {
+        enableCORS(req, res);
         if (auto tok = getSessionToken(req)) {
             if (auto uid = db.getUserIdBySession(*tok)) {
-                res.set_content(nlohmann::json{{"userId", *uid}}.dump(), "application/json");
+                res.set_content(
+                    nlohmann::json{{"userId", *uid}}.dump(),
+                                "application/json"
+                );
                 return;
             }
         }
         res.status = 401;
-        res.set_content(R"({"error":"Not authenticated"})", "application/json");
+        res.set_content(R"({"error":"Not authenticated"})","application/json");
     });
 
-    // Auth guard
+    // --- HEALTH CHECK ---
+
+    svr.Get("/api/test", [&](const auto& req, auto& res) {
+        enableCORS(req, res);
+        res.set_content(R"({"status":"success"})","application/json");
+    });
+
+    // Auth‑guard helper
     auto requireUser = [&](const httplib::Request& req, httplib::Response& res) -> int {
-        enableCORS(res);
+        enableCORS(req, res);
         if (auto tok = getSessionToken(req)) {
             if (auto uid = db.getUserIdBySession(*tok)) return *uid;
         }
         res.status = 401;
-        res.set_content(R"({"error":"Unauthorized"})", "application/json");
+        res.set_content(R"({"error":"Unauthorized"})","application/json");
         return -1;
     };
 
-    // CRUD books
-    svr.Get("/api/books", [&](auto& req, auto& res) {
-        int uid = requireUser(req, res); if (uid < 0) return;
-        auto arr = db.getBooks(uid);
-        res.set_content(arr.dump(), "application/json");
+    // --- BOOK CRUD ---
+
+    svr.Get("/api/books", [&](const auto& req, auto& res) {
+        int uid = requireUser(req, res); if (uid<0) return;
+        res.set_content(db.getBooks(uid).dump(),"application/json");
     });
-    svr.Post("/api/books", [&](auto& req, auto& res) {
-        int uid = requireUser(req, res); if (uid < 0) return;
+
+    svr.Post("/api/books", [&](const auto& req, auto& res) {
+        int uid = requireUser(req, res); if (uid<0) return;
         auto b = nlohmann::json::parse(req.body);
         db.addBook(
             uid,
@@ -167,10 +202,11 @@ int main() {
                    b.value("rating",3)
         );
         res.status = 201;
-        res.set_content(R"({"message":"Book added"})", "application/json");
+        res.set_content(R"({"message":"Book added"})","application/json");
     });
-    svr.Put(R"(/api/books/(\d+))", [&](auto& req, auto& res) {
-        int uid = requireUser(req, res); if (uid < 0) return;
+
+    svr.Put(R"(/api/books/(\d+))", [&](const auto& req, auto& res) {
+        int uid = requireUser(req, res); if (uid<0) return;
         int id = std::stoi(req.matches[1]);
         auto b = nlohmann::json::parse(req.body);
         db.updateBook(
@@ -184,53 +220,25 @@ int main() {
             b.value("thumbnail",""),
             b.value("rating",3)
         );
-        res.set_content(R"({"message":"Book updated"})", "application/json");
+        res.set_content(R"({"message":"Book updated"})","application/json");
     });
-    svr.Delete(R"(/api/books/(\d+))", [&](auto& req, auto& res) {
-        int uid = requireUser(req, res); if (uid < 0) return;
+
+    svr.Delete(R"(/api/books/(\d+))", [&](const auto& req, auto& res) {
+        int uid = requireUser(req, res); if (uid<0) return;
         int id = std::stoi(req.matches[1]);
         db.deleteBook(id, uid);
-        res.set_content(R"({"message":"Book deleted"})", "application/json");
+        res.set_content(R"({"message":"Book deleted"})","application/json");
     });
 
-    // Reading-session endpoints
-    svr.Post(R"(/api/books/(\d+)/session/start)", [&](auto& req, auto& res) {
-        int uid = requireUser(req, res); if (uid < 0) return;
-        int bookId = std::stoi(req.matches[1]);
-        auto j = nlohmann::json::parse(req.body);
-        int startPages = j.value("startPagesRead", 0);
-        int sessionId;
-        db.startReadingSession(uid, bookId, nowISO(), startPages, sessionId);
-        res.set_content(nlohmann::json{{"sessionId", sessionId}}.dump(), "application/json");
-    });
-    svr.Post(R"(/api/books/(\d+)/session/stop)", [&](auto& req, auto& res) {
-        int uid = requireUser(req, res); if (uid < 0) return;
-        auto j = nlohmann::json::parse(req.body);
-        db.stopReadingSession(j["sessionId"], nowISO(), j["endPagesRead"]);
-        res.set_content(R"({"message":"Session stopped"})", "application/json");
-    });
-    svr.Get("/api/sessions", [&](auto& req, auto& res) {
-        int uid = requireUser(req, res); if (uid < 0) return;
-        auto vec = db.getReadingSessions(uid);
-        nlohmann::json arr = nlohmann::json::array();
-        for (auto& s : vec) {
-            arr.push_back({
-                {"id", s.id},
-                {"bookId", s.bookId},
-                {"startTime", s.startTime},
-                {"endTime",   s.endTime},
-                {"pagesRead", s.pagesRead}
-            });
-        }
-        res.set_content(arr.dump(), "application/json");
-    });
-
-    // Public Google Books search
-    svr.Get(R"(/api/search/(.+))", [&](auto& req, auto& res) {
-        enableCORS(res);
+    // Google Books proxy
+    svr.Get(R"(/api/search/(.+))", [&](const auto& req, auto& res) {
+        enableCORS(req, res);
         auto out = api.search(req.matches[1]);
-        res.set_content(out.dump(), "application/json");
+        res.set_content(out.dump(),"application/json");
     });
+
+    // — Finally, serve the frontend —
+    svr.set_mount_point("/", "/home/dakota/BookTracker/frontend");
 
     std::cout << "🚀 Serving frontend + API at http://localhost:8080\n";
     svr.listen("0.0.0.0", 8080);
