@@ -42,7 +42,6 @@ A full‑stack book–tracking web app with:
 - C++17‑compatible compiler (gcc, clang, MSVC)  
 - [CMake](https://cmake.org/)  
 - SQLite3  
-- A GitHub repository (optional, for version control)  
 
 ---
 
