@@ -51,3 +51,9 @@ A full‑stack book–tracking web app with:
    ```bash
    git clone https://github.com/YOUR_USERNAME/BookTracker.git
    cd BookTracker
+
+![image](https://github.com/user-attachments/assets/481c5c64-fe4c-44db-a410-51d6262e387e)
+
+![image](https://github.com/user-attachments/assets/6eeeebeb-5ac4-4c35-8561-9860a0d08d77)
+
+![image](https://github.com/user-attachments/assets/41c9e971-b559-4a79-b9d2-05cac7ea5423)
