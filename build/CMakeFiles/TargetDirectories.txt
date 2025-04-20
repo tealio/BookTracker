@@ -1,4 +1,4 @@
-/home/dakota/BookTracker/build/CMakeFiles/BookTracker.dir
+/home/dakota/BookTracker/build/CMakeFiles/BookTrackerBackend.dir
 /home/dakota/BookTracker/build/CMakeFiles/edit_cache.dir
 /home/dakota/BookTracker/build/CMakeFiles/rebuild_cache.dir
 /home/dakota/BookTracker/build/CMakeFiles/list_install_components.dir
@@ -19,9 +19,3 @@
 /home/dakota/BookTracker/build/external/SQLiteCpp/sqlite3/CMakeFiles/install.dir
 /home/dakota/BookTracker/build/external/SQLiteCpp/sqlite3/CMakeFiles/install/local.dir
 /home/dakota/BookTracker/build/external/SQLiteCpp/sqlite3/CMakeFiles/install/strip.dir
-/home/dakota/BookTracker/build/external/json/CMakeFiles/edit_cache.dir
-/home/dakota/BookTracker/build/external/json/CMakeFiles/rebuild_cache.dir
-/home/dakota/BookTracker/build/external/json/CMakeFiles/list_install_components.dir
-/home/dakota/BookTracker/build/external/json/CMakeFiles/install.dir
-/home/dakota/BookTracker/build/external/json/CMakeFiles/install/local.dir
-/home/dakota/BookTracker/build/external/json/CMakeFiles/install/strip.dir

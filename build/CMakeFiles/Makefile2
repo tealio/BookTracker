@@ -63,26 +63,22 @@ CMAKE_BINARY_DIR = /home/dakota/BookTracker/build
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/BookTracker.dir/all
+all: CMakeFiles/BookTrackerBackend.dir/all
 all: external/SQLiteCpp/all
-all: external/json/all
 .PHONY : all
 
 # The main recursive "codegen" target.
-codegen: CMakeFiles/BookTracker.dir/codegen
+codegen: CMakeFiles/BookTrackerBackend.dir/codegen
 codegen: external/SQLiteCpp/codegen
-codegen: external/json/codegen
 .PHONY : codegen
 
 # The main recursive "preinstall" target.
 preinstall: external/SQLiteCpp/preinstall
-preinstall: external/json/preinstall
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/BookTracker.dir/clean
+clean: CMakeFiles/BookTrackerBackend.dir/clean
 clean: external/SQLiteCpp/clean
-clean: external/json/clean
 .PHONY : clean
 
 #=============================================================================
@@ -127,56 +123,37 @@ external/SQLiteCpp/sqlite3/clean: external/SQLiteCpp/sqlite3/CMakeFiles/sqlite3.
 .PHONY : external/SQLiteCpp/sqlite3/clean
 
 #=============================================================================
-# Directory level rules for directory external/json
-
-# Recursive "all" directory target.
-external/json/all:
-.PHONY : external/json/all
-
-# Recursive "codegen" directory target.
-external/json/codegen:
-.PHONY : external/json/codegen
-
-# Recursive "preinstall" directory target.
-external/json/preinstall:
-.PHONY : external/json/preinstall
-
-# Recursive "clean" directory target.
-external/json/clean:
-.PHONY : external/json/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/BookTracker.dir
+# Target rules for target CMakeFiles/BookTrackerBackend.dir
 
 # All Build rule for target.
-CMakeFiles/BookTracker.dir/all: external/SQLiteCpp/CMakeFiles/SQLiteCpp.dir/all
-CMakeFiles/BookTracker.dir/all: external/SQLiteCpp/sqlite3/CMakeFiles/sqlite3.dir/all
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTracker.dir/build.make CMakeFiles/BookTracker.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTracker.dir/build.make CMakeFiles/BookTracker.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/dakota/BookTracker/build/CMakeFiles --progress-num=1,2,3,4 "Built target BookTracker"
-.PHONY : CMakeFiles/BookTracker.dir/all
+CMakeFiles/BookTrackerBackend.dir/all: external/SQLiteCpp/sqlite3/CMakeFiles/sqlite3.dir/all
+CMakeFiles/BookTrackerBackend.dir/all: external/SQLiteCpp/CMakeFiles/SQLiteCpp.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTrackerBackend.dir/build.make CMakeFiles/BookTrackerBackend.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTrackerBackend.dir/build.make CMakeFiles/BookTrackerBackend.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/dakota/BookTracker/build/CMakeFiles --progress-num=1,2,3,4 "Built target BookTrackerBackend"
+.PHONY : CMakeFiles/BookTrackerBackend.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/BookTracker.dir/rule: cmake_check_build_system
+CMakeFiles/BookTrackerBackend.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/dakota/BookTracker/build/CMakeFiles 14
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/BookTracker.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/BookTrackerBackend.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/dakota/BookTracker/build/CMakeFiles 0
-.PHONY : CMakeFiles/BookTracker.dir/rule
+.PHONY : CMakeFiles/BookTrackerBackend.dir/rule
 
 # Convenience name for target.
-BookTracker: CMakeFiles/BookTracker.dir/rule
-.PHONY : BookTracker
+BookTrackerBackend: CMakeFiles/BookTrackerBackend.dir/rule
+.PHONY : BookTrackerBackend
 
 # codegen rule for target.
-CMakeFiles/BookTracker.dir/codegen:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTracker.dir/build.make CMakeFiles/BookTracker.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/dakota/BookTracker/build/CMakeFiles --progress-num=1,2,3,4 "Finished codegen for target BookTracker"
-.PHONY : CMakeFiles/BookTracker.dir/codegen
+CMakeFiles/BookTrackerBackend.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTrackerBackend.dir/build.make CMakeFiles/BookTrackerBackend.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/dakota/BookTracker/build/CMakeFiles --progress-num=1,2,3,4 "Finished codegen for target BookTrackerBackend"
+.PHONY : CMakeFiles/BookTrackerBackend.dir/codegen
 
 # clean rule for target.
-CMakeFiles/BookTracker.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTracker.dir/build.make CMakeFiles/BookTracker.dir/clean
-.PHONY : CMakeFiles/BookTracker.dir/clean
+CMakeFiles/BookTrackerBackend.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTrackerBackend.dir/build.make CMakeFiles/BookTrackerBackend.dir/clean
+.PHONY : CMakeFiles/BookTrackerBackend.dir/clean
 
 #=============================================================================
 # Target rules for target external/SQLiteCpp/CMakeFiles/SQLiteCpp.dir

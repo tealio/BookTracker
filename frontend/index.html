@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" class="">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>BookTracker</title>
+
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -16,74 +18,161 @@
       }
     };
   </script>
+
+  <!-- Chart.js for the overview chart -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="min-h-screen bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white px-4 max-w-3xl mx-auto transition">
+<body class="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white px-4 max-w-3xl mx-auto transition">
 
-  <div class="flex justify-between items-center my-4">
-    <h1 class="text-3xl font-bold">📚 BookTracker</h1>
-    <button onclick="toggleDarkMode()"
-      class="px-3 py-1 rounded text-sm bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 transition">
-      🌓 Toggle Dark Mode
-    </button>
-  </div>
-
-  <!-- Search -->
-  <section class="mb-8">
-    <h2 class="text-xl font-semibold mb-2">Search for Books</h2>
-    <form id="searchForm" class="flex gap-2 mb-2">
-      <input id="searchInput" class="flex-1 px-3 py-2 rounded border bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600" placeholder="Search for a book..." required />
-      <button class="bg-primary text-white px-4 py-2 rounded hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 transition">Search</button>
-    </form>
-    <div id="searchResults" class="space-y-4"></div>
-  </section>
-
-  <!-- Add a Book -->
-  <section class="mb-8">
-    <h2 class="text-xl font-semibold mb-2">Add a Book</h2>
-    <form id="addBookForm" class="space-y-2">
-      <input id="title" class="w-full px-3 py-2 border rounded bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600" placeholder="Book Title" required />
-      <input id="author" class="w-full px-3 py-2 border rounded bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600" placeholder="Author" required />
-      <input id="genre" class="w-full px-3 py-2 border rounded bg-white text-gray-900 dark:bg-gray-700 dark:text-white dark:border-gray-600" placeholder="Genre" />
-      <button class="bg-primary text-white px-4 py-2 rounded hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 transition">Add Book</button>
-    </form>
-  </section>
-
-  <!-- 📊 Stats Dashboard -->
-  <section class="mb-8">
-    <h2 class="text-xl font-semibold mb-2">📊 Your Reading Stats</h2>
-    <div id="stats" class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-100 dark:bg-gray-800 p-4 rounded shadow"></div>
-  </section>
-
-  <!-- Collection Controls -->
-  <div class="flex flex-wrap justify-between items-center mb-4 gap-4">
-    <div>
-      <label for="filter" class="mr-2">Filter:</label>
-      <select id="filter" class="p-2 border rounded dark:bg-gray-700 dark:text-white dark:border-gray-600">
-        <option value="all">All</option>
-        <option value="reading">Reading</option>
-        <option value="completed">Completed</option>
-        <option value="not-started">Not Started</option>
-      </select>
+  <!-- Authentication Forms -->
+  <div id="auth" class="space-y-8 py-8">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded shadow">
+      <h3 class="text-xl font-semibold mb-4">Sign Up</h3>
+      <form id="signupForm" class="space-y-2">
+        <input id="signupUsername" placeholder="Username" required
+               class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white dark:border-gray-600" />
+        <input id="signupPassword" type="password" placeholder="Password" required
+               class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white dark:border-gray-600" />
+        <button class="w-full bg-primary text-white py-2 rounded">Sign Up</button>
+      </form>
     </div>
-
-    <div>
-      <label for="sort" class="mr-2">Sort:</label>
-      <select id="sort" class="p-2 border rounded dark:bg-gray-700 dark:text-white dark:border-gray-600">
-        <option value="title-asc">Title (A–Z)</option>
-        <option value="title-desc">Title (Z–A)</option>
-        <option value="progress-desc">Progress (High–Low)</option>
-        <option value="progress-asc">Progress (Low–High)</option>
-        <option value="rating-desc">Rating (High–Low)</option>
-        <option value="rating-asc">Rating (Low–High)</option>
-      </select>
+    <div class="bg-white dark:bg-gray-800 p-6 rounded shadow">
+      <h3 class="text-xl font-semibold mb-4">Log In</h3>
+      <form id="loginForm" class="space-y-2">
+        <input id="loginUsername" placeholder="Username" required
+               class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white dark:border-gray-600" />
+        <input id="loginPassword" type="password" placeholder="Password" required
+               class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white dark:border-gray-600" />
+        <button class="w-full bg-primary text-white py-2 rounded">Log In</button>
+      </form>
     </div>
   </div>
 
-  <!-- Collection -->
-  <section>
-    <h2 class="text-xl font-semibold mb-2">My Collection</h2>
-    <div id="books" class="space-y-4"></div>
-  </section>
+  <!-- Main App -->
+  <div id="app" style="display:none;">
+
+    <!-- Header -->
+    <div class="flex justify-between items-center my-4">
+      <h1 class="text-3xl font-bold">📚 BookTracker</h1>
+      <div class="space-x-2">
+        <button id="logoutBtn" class="px-3 py-1 bg-red-500 text-white rounded">Log Out</button>
+        <button onclick="toggleDarkMode()" class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded">🌓</button>
+      </div>
+    </div>
+
+    <!-- Reading Overview Chart -->
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold mb-2">📈 Reading Overview</h2>
+      <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+        <canvas id="overviewChart"></canvas>
+        <p id="paceText" class="mt-2 dark:text-gray-300"></p>
+        <p id="streakText" class="dark:text-gray-300"></p>
+      </div>
+    </section>
+
+    <!-- Search for Books -->
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold mb-2">Search for Books</h2>
+      <form id="searchForm" class="flex gap-2 mb-2">
+        <input id="searchInput" type="search" required
+               class="flex-1 px-3 py-2 border border-gray-300 rounded bg-white text-gray-900
+                      dark:bg-gray-700 dark:text-white dark:border-gray-600"
+               placeholder="Search for a book…" />
+        <button class="bg-primary text-white px-4 py-2 rounded hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 transition">
+          Search
+        </button>
+      </form>
+      <div id="searchResults" class="space-y-4"></div>
+    </section>
+
+    <!-- Collapsible “Add a Book” Panel -->
+    <details class="mb-8 border border-gray-300 dark:border-gray-600 rounded">
+      <summary class="flex justify-between items-center px-4 py-2 bg-gray-200 dark:bg-gray-700 cursor-pointer select-none rounded-t">
+        <h2 class="text-xl font-semibold">➕ Add a Book</h2>
+        <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 9l-7 7-7-7" />
+        </svg>
+      </summary>
+      <form id="addBookForm" class="space-y-4 p-4 bg-white dark:bg-gray-800 rounded-b">
+        <input id="title" required placeholder="Book Title"
+               class="w-full px-3 py-2 border border-gray-300 rounded bg-gray-100 dark:bg-gray-700 dark:text-white dark:border-gray-600" />
+
+        <input id="author" required placeholder="Author"
+               class="w-full px-3 py-2 border border-gray-300 rounded bg-gray-100 dark:bg-gray-700 dark:text-white dark:border-gray-600" />
+
+        <input id="genre" placeholder="Genre"
+               class="w-full px-3 py-2 border border-gray-300 rounded bg-gray-100 dark:bg-gray-700 dark:text-white dark:border-gray-600" />
+
+        <input id="tags" placeholder="Tags (comma-separated)"
+               class="w-full px-3 py-2 border border-gray-300 rounded bg-gray-100 dark:bg-gray-700 dark:text-white dark:border-gray-600" />
+
+        <label class="block text-gray-800 dark:text-gray-300">
+          Goal by:
+          <input id="goalEndDate" type="date"
+                 class="mt-1 w-full px-3 py-2 border border-gray-300 rounded bg-gray-100 dark:bg-gray-700 dark:text-white dark:border-gray-600" />
+        </label>
+
+        <input id="totalPages" type="number" min="0" placeholder="Total pages"
+               class="w-full px-3 py-2 border border-gray-300 rounded bg-gray-100 dark:bg-gray-700 dark:text-white dark:border-gray-600" />
+
+        <input id="pagesRead" type="number" min="0" placeholder="Pages read"
+               class="w-full px-3 py-2 border border-gray-300 rounded bg-gray-100 dark:bg-gray-700 dark:text-white dark:border-gray-600" />
+
+        <input id="thumbnail" type="url" placeholder="Cover image URL"
+               class="w-full px-3 py-2 border border-gray-300 rounded bg-gray-100 dark:bg-gray-700 dark:text-white dark:border-gray-600" />
+
+        <div class="flex items-center gap-2">
+          <input id="progressSlider" type="range" min="0" max="100" class="flex-1" />
+          <span id="percentLabel" class="w-12 text-right dark:text-gray-300">0%</span>
+        </div>
+
+        <button type="submit"
+                class="bg-primary text-white px-4 py-2 rounded hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 transition">
+          Add Book
+        </button>
+      </form>
+    </details>
+
+    <!-- Stats Dashboard -->
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold mb-2">📊 Your Reading Stats</h2>
+      <div id="stats" class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-100 dark:bg-gray-800 p-4 rounded shadow"></div>
+    </section>
+
+    <!-- Collection Controls -->
+    <div class="flex flex-wrap justify-between items-center mb-4 gap-4">
+      <div>
+        <label for="filter" class="mr-2">Filter:</label>
+        <select id="filter"
+                class="p-2 border border-gray-300 rounded bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600">
+          <option value="all">All</option>
+          <option value="reading">Reading</option>
+          <option value="completed">Completed</option>
+          <option value="not-started">Not Started</option>
+        </select>
+      </div>
+      <div>
+        <label for="sort" class="mr-2">Sort:</label>
+        <select id="sort"
+                class="p-2 border border-gray-300 rounded bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600">
+          <option value="title-asc">Title (A–Z)</option>
+          <option value="title-desc">Title (Z–A)</option>
+          <option value="progress-desc">Progress (High–Low)</option>
+          <option value="progress-asc">Progress (Low–High)</option>
+          <option value="rating-desc">Rating (High–Low)</option>
+          <option value="rating-asc">Rating (Low–High)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Collection -->
+    <section>
+      <h2 class="text-xl font-semibold mb-2">My Collection</h2>
+      <div id="books" class="space-y-4"></div>
+    </section>
+
+  </div>
 
   <script src="app.js"></script>
 </body>

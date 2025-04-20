@@ -3,8 +3,7 @@
 	[
 		"/home/dakota/BookTracker/build/cmake_install.cmake",
 		"/home/dakota/BookTracker/build/external/SQLiteCpp/cmake_install.cmake",
-		"/home/dakota/BookTracker/build/external/SQLiteCpp/sqlite3/cmake_install.cmake",
-		"/home/dakota/BookTracker/build/external/json/cmake_install.cmake"
+		"/home/dakota/BookTracker/build/external/SQLiteCpp/sqlite3/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

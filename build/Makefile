@@ -162,17 +162,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named BookTracker
+# Target rules for targets named BookTrackerBackend
 
 # Build rule for target.
-BookTracker: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 BookTracker
-.PHONY : BookTracker
+BookTrackerBackend: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 BookTrackerBackend
+.PHONY : BookTrackerBackend
 
 # fast build rule for target.
-BookTracker/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTracker.dir/build.make CMakeFiles/BookTracker.dir/build
-.PHONY : BookTracker/fast
+BookTrackerBackend/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTrackerBackend.dir/build.make CMakeFiles/BookTrackerBackend.dir/build
+.PHONY : BookTrackerBackend/fast
 
 #=============================================================================
 # Target rules for targets named SQLiteCpp
@@ -200,77 +200,77 @@ sqlite3/fast:
 	$(MAKE) $(MAKESILENT) -f external/SQLiteCpp/sqlite3/CMakeFiles/sqlite3.dir/build.make external/SQLiteCpp/sqlite3/CMakeFiles/sqlite3.dir/build
 .PHONY : sqlite3/fast
 
-src/api.o: src/api.cpp.o
-.PHONY : src/api.o
+backend/src/api.o: backend/src/api.cpp.o
+.PHONY : backend/src/api.o
 
 # target to build an object file
-src/api.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTracker.dir/build.make CMakeFiles/BookTracker.dir/src/api.cpp.o
-.PHONY : src/api.cpp.o
+backend/src/api.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTrackerBackend.dir/build.make CMakeFiles/BookTrackerBackend.dir/backend/src/api.cpp.o
+.PHONY : backend/src/api.cpp.o
 
-src/api.i: src/api.cpp.i
-.PHONY : src/api.i
+backend/src/api.i: backend/src/api.cpp.i
+.PHONY : backend/src/api.i
 
 # target to preprocess a source file
-src/api.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTracker.dir/build.make CMakeFiles/BookTracker.dir/src/api.cpp.i
-.PHONY : src/api.cpp.i
+backend/src/api.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTrackerBackend.dir/build.make CMakeFiles/BookTrackerBackend.dir/backend/src/api.cpp.i
+.PHONY : backend/src/api.cpp.i
 
-src/api.s: src/api.cpp.s
-.PHONY : src/api.s
+backend/src/api.s: backend/src/api.cpp.s
+.PHONY : backend/src/api.s
 
 # target to generate assembly for a file
-src/api.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTracker.dir/build.make CMakeFiles/BookTracker.dir/src/api.cpp.s
-.PHONY : src/api.cpp.s
+backend/src/api.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTrackerBackend.dir/build.make CMakeFiles/BookTrackerBackend.dir/backend/src/api.cpp.s
+.PHONY : backend/src/api.cpp.s
 
-src/database.o: src/database.cpp.o
-.PHONY : src/database.o
+backend/src/database.o: backend/src/database.cpp.o
+.PHONY : backend/src/database.o
 
 # target to build an object file
-src/database.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTracker.dir/build.make CMakeFiles/BookTracker.dir/src/database.cpp.o
-.PHONY : src/database.cpp.o
+backend/src/database.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTrackerBackend.dir/build.make CMakeFiles/BookTrackerBackend.dir/backend/src/database.cpp.o
+.PHONY : backend/src/database.cpp.o
 
-src/database.i: src/database.cpp.i
-.PHONY : src/database.i
+backend/src/database.i: backend/src/database.cpp.i
+.PHONY : backend/src/database.i
 
 # target to preprocess a source file
-src/database.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTracker.dir/build.make CMakeFiles/BookTracker.dir/src/database.cpp.i
-.PHONY : src/database.cpp.i
+backend/src/database.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTrackerBackend.dir/build.make CMakeFiles/BookTrackerBackend.dir/backend/src/database.cpp.i
+.PHONY : backend/src/database.cpp.i
 
-src/database.s: src/database.cpp.s
-.PHONY : src/database.s
+backend/src/database.s: backend/src/database.cpp.s
+.PHONY : backend/src/database.s
 
 # target to generate assembly for a file
-src/database.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTracker.dir/build.make CMakeFiles/BookTracker.dir/src/database.cpp.s
-.PHONY : src/database.cpp.s
+backend/src/database.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTrackerBackend.dir/build.make CMakeFiles/BookTrackerBackend.dir/backend/src/database.cpp.s
+.PHONY : backend/src/database.cpp.s
 
-src/main.o: src/main.cpp.o
-.PHONY : src/main.o
+backend/src/main.o: backend/src/main.cpp.o
+.PHONY : backend/src/main.o
 
 # target to build an object file
-src/main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTracker.dir/build.make CMakeFiles/BookTracker.dir/src/main.cpp.o
-.PHONY : src/main.cpp.o
+backend/src/main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTrackerBackend.dir/build.make CMakeFiles/BookTrackerBackend.dir/backend/src/main.cpp.o
+.PHONY : backend/src/main.cpp.o
 
-src/main.i: src/main.cpp.i
-.PHONY : src/main.i
+backend/src/main.i: backend/src/main.cpp.i
+.PHONY : backend/src/main.i
 
 # target to preprocess a source file
-src/main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTracker.dir/build.make CMakeFiles/BookTracker.dir/src/main.cpp.i
-.PHONY : src/main.cpp.i
+backend/src/main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTrackerBackend.dir/build.make CMakeFiles/BookTrackerBackend.dir/backend/src/main.cpp.i
+.PHONY : backend/src/main.cpp.i
 
-src/main.s: src/main.cpp.s
-.PHONY : src/main.s
+backend/src/main.s: backend/src/main.cpp.s
+.PHONY : backend/src/main.s
 
 # target to generate assembly for a file
-src/main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTracker.dir/build.make CMakeFiles/BookTracker.dir/src/main.cpp.s
-.PHONY : src/main.cpp.s
+backend/src/main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/BookTrackerBackend.dir/build.make CMakeFiles/BookTrackerBackend.dir/backend/src/main.cpp.s
+.PHONY : backend/src/main.cpp.s
 
 # Help Target
 help:
@@ -284,18 +284,18 @@ help:
 	@echo "... install/strip"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
-	@echo "... BookTracker"
+	@echo "... BookTrackerBackend"
 	@echo "... SQLiteCpp"
 	@echo "... sqlite3"
-	@echo "... src/api.o"
-	@echo "... src/api.i"
-	@echo "... src/api.s"
-	@echo "... src/database.o"
-	@echo "... src/database.i"
-	@echo "... src/database.s"
-	@echo "... src/main.o"
-	@echo "... src/main.i"
-	@echo "... src/main.s"
+	@echo "... backend/src/api.o"
+	@echo "... backend/src/api.i"
+	@echo "... backend/src/api.s"
+	@echo "... backend/src/database.o"
+	@echo "... backend/src/database.i"
+	@echo "... backend/src/database.s"
+	@echo "... backend/src/main.o"
+	@echo "... backend/src/main.i"
+	@echo "... backend/src/main.s"
 .PHONY : help
 
 

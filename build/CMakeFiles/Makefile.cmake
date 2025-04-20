@@ -8,16 +8,12 @@ set(CMAKE_DEPENDS_GENERATOR "Unix Makefiles")
 set(CMAKE_MAKEFILE_DEPENDS
   "CMakeCache.txt"
   "/home/dakota/BookTracker/CMakeLists.txt"
-  "CMakeFiles/4.0.0/CMakeCCompiler.cmake"
-  "CMakeFiles/4.0.0/CMakeCXXCompiler.cmake"
-  "CMakeFiles/4.0.0/CMakeSystem.cmake"
+  "CMakeFiles/4.0.1/CMakeCCompiler.cmake"
+  "CMakeFiles/4.0.1/CMakeCXXCompiler.cmake"
+  "CMakeFiles/4.0.1/CMakeSystem.cmake"
   "/home/dakota/BookTracker/external/SQLiteCpp/CMakeLists.txt"
   "/home/dakota/BookTracker/external/SQLiteCpp/cmake/SQLiteCppConfig.cmake.in"
   "/home/dakota/BookTracker/external/SQLiteCpp/sqlite3/CMakeLists.txt"
-  "/home/dakota/BookTracker/external/json/CMakeLists.txt"
-  "/home/dakota/BookTracker/external/json/cmake/config.cmake.in"
-  "/home/dakota/BookTracker/external/json/cmake/nlohmann_jsonConfigVersion.cmake.in"
-  "/home/dakota/BookTracker/external/json/cmake/pkg-config.pc.in"
   "/usr/share/cmake/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in"
   "/usr/share/cmake/Modules/CMakeCInformation.cmake"
   "/usr/share/cmake/Modules/CMakeCXXInformation.cmake"
@@ -35,8 +31,6 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/usr/share/cmake/Modules/Compiler/GNU-C.cmake"
   "/usr/share/cmake/Modules/Compiler/GNU-CXX.cmake"
   "/usr/share/cmake/Modules/Compiler/GNU.cmake"
-  "/usr/share/cmake/Modules/ExternalProject.cmake"
-  "/usr/share/cmake/Modules/ExternalProject/shared_internal_commands.cmake"
   "/usr/share/cmake/Modules/FindPackageHandleStandardArgs.cmake"
   "/usr/share/cmake/Modules/FindPackageMessage.cmake"
   "/usr/share/cmake/Modules/FindPython.cmake"
@@ -76,15 +70,11 @@ set(CMAKE_MAKEFILE_PRODUCTS
   "external/SQLiteCpp/cmake/SQLiteCppConfig.cmake"
   "external/SQLiteCpp/CMakeFiles/CMakeDirectoryInformation.cmake"
   "external/SQLiteCpp/sqlite3/CMakeFiles/CMakeDirectoryInformation.cmake"
-  "external/json/nlohmann_json.pc"
-  "external/json/nlohmann_jsonConfigVersion.cmake"
-  "external/json/nlohmann_jsonConfig.cmake"
-  "external/json/CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/BookTracker.dir/DependInfo.cmake"
+  "CMakeFiles/BookTrackerBackend.dir/DependInfo.cmake"
   "external/SQLiteCpp/CMakeFiles/SQLiteCpp.dir/DependInfo.cmake"
   "external/SQLiteCpp/sqlite3/CMakeFiles/sqlite3.dir/DependInfo.cmake"
   )
